@@ -1,6 +1,6 @@
-
-const { Client } = require("pg");
-
-const client = new Client(process.env.DB_URL); //Configuring PostgresSQL Database
-
-module.exports = client;
+const { Pool } = require('pg');
+const pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+});
+module.exports = pool;
