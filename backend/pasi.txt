@@ -1,9 +1,0 @@
-2. formatare cod + restructurare repo + commit
-3. hostez backend
-4. integrare frontend cu backendul hostat
-
--- final CHS 19 dec --
-
-4. testare autorizare cu si fara token
-5. adaugare swagger
-6. mai vedem
