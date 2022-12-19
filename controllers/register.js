@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
     const { id, firstname, lastname, email, phonenumber, password, birthdate, bloodtype } = req.body;
     try {
-        const data = await client.query(`SELECT * FROM users WHERE email= $4;`, [email]); //Checking if user already exists
+        const data = await client.query(`SELECT * FROM users WHERE email= $1;`, [email]); //Checking if user already exists
         const arr = data.rows;
         if (arr.length != 0) {
             return res.status(400).json({
