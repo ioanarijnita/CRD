@@ -11,7 +11,7 @@ exports.login = async (req, res) => {
         const data = await client.query(`SELECT * FROM users WHERE phonenumber= $1;`, [phonenumber]) //Verifying if the user exists in the database
         const user = data.rows;
         if (user.length === 0) {
-            res.status(400).json({
+            res.status(500).json({
                 error: "User is not registered, Sign Up first",
             });
         }

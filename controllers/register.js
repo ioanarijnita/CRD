@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
         const data = await client.query(`SELECT * FROM users WHERE email= $1;`, [email]); //Checking if user already exists
         const arr = data.rows;
         if (arr.length != 0) {
-            return res.status(400).json({
+            return res.status(500).json({
                 error: "Email already there, No need to register again.",
             });
         }
