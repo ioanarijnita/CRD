@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { Button, FormControl, Input, VStack } from "native-base";
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { px } from "../../hooks/utils";
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { AuthenticationModal } from "../../components/authentification-modal";
@@ -44,11 +44,34 @@ export function LoginScreen() {
         if (errorsFound > 0) return false;
         return true;
     };
-
+    const concept = React.useContext(LoginContext);
     const onSubmit = () => {
         if (validate()) {
-            console.log('Submitted');
-            navigation.navigate("Home" as never);
+            console.log(formData)
+            fetch('https://chs.herokuapp.com/user/login', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    phonenumber: formData.phone,
+                    password: formData.password
+                })
+            }).then((response) => {
+                if (response.ok) {
+                    
+                    return response.json();
+                }
+                Alert.alert("Internal server error!");
+            }).then(res => {
+                concept.setValue(res);
+                navigation.navigate("Home" as never);
+                setData({
+                    phone: "",
+                    password: ""
+                });
+            });
         } else {
             console.log('Validation Failed');
         }
@@ -69,6 +92,7 @@ export function LoginScreen() {
                                 size={px(24)}
                                 color="#808080" />}
                             height={px(40)}
+                            value = {formData.phone}
                             borderRadius={px(24)}
                             _focus={{ style: { backgroundColor: "#F8F8F8" } }}
                             placeholder="Phone number"
@@ -84,6 +108,7 @@ export function LoginScreen() {
                                 size={px(24)}
                                 color="#808080" />}
                             height={px(40)}
+                            value = {formData.password}
                             borderRadius={px(24)}
                             _focus={{ style: { backgroundColor: "#F8F8F8" } }}
                             placeholder="Password"
@@ -110,3 +135,25 @@ export function LoginScreen() {
         </View>
     </AuthenticationModal>
 }
+
+export type Concept = {
+    id: string,
+      firstName: string,
+        lastName: string,
+        email: string,
+        phone: string,
+        password: string,
+        birthDate: string,
+        bloodType: string
+}
+
+export const LoginContext = React.createContext<{value: Concept, setValue: (value: Concept) => void}>({value: {
+    id: "",
+      firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        password: "",
+        birthDate: "",
+        bloodType: ""
+}, setValue: () => {}})

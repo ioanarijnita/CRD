@@ -10,7 +10,7 @@ export function SignUpNavigator() {
     return (
         <Stack.Navigator screenOptions={{}}>
              <Stack.Screen options = {{headerShown: false}} name="SignUp" component={SignUpScreen} />
-            <Stack.Screen   options = {{ }} name="Home" component={HomeScreen} />
+            <Stack.Screen   options = {{headerShown: false}} name="Home" component={HomeScreen} />
             <Stack.Screen   options = {{headerShown: false }} name="Login" component={LoginScreen} />
         </Stack.Navigator>
     );

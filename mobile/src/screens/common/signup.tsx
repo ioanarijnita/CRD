@@ -1,13 +1,14 @@
 import { useNavigation } from "@react-navigation/native";
-import { Box, Button, FormControl, Input, ScrollView, VStack } from "native-base";
+import { Box, Button, FormControl, Input, VStack } from "native-base";
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { AuthenticationModal } from "../../components/authentification-modal";
 import { px } from "../../hooks/utils";
 import Collapsible from "react-native-collapsible";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNDateTimePicker from '@react-native-community/datetimepicker';
+import moment from "moment";
 
 type FormData<T> = {
     firstName: T,
@@ -24,7 +25,8 @@ export function SignUpScreen() {
     const [isCollapsedAboutYou, setIsCollapsedAboutYou] = useState(true);
     const [isCollapsedAccountDetails, setIsCollapsedAccountDetails] = useState(true);
     const [date, setDate] = useState(new Date());
-    const [formData, setData] = useState<FormData<string>>({
+
+    const initialData = {
         firstName: "",
         lastName: "",
         email: "",
@@ -32,7 +34,8 @@ export function SignUpScreen() {
         password: "",
         birthDate: "",
         bloodType: ""
-    });
+    }
+    const [formData, setData] = useState<FormData<string>>(initialData);
     const [errors, setErrors] = useState<FormData<string>>({
         firstName: "",
         lastName: "",
@@ -42,6 +45,7 @@ export function SignUpScreen() {
         birthDate: "",
         bloodType: ""
     });
+
     const validate = () => {
         let errorsFound = 0;
         let validationErrors = {
@@ -57,7 +61,6 @@ export function SignUpScreen() {
             validationErrors = { ...validationErrors, firstName: "First name is required" }
             errorsFound++;
         }
-        console.log(errors)
         if (formData.lastName === "") {
             validationErrors = {
                 ...validationErrors,
@@ -93,7 +96,6 @@ export function SignUpScreen() {
             }
             errorsFound++;
         }
-        console.log(validationErrors)
         setErrors(validationErrors);
         if (errorsFound > 0) return false;
         return true;
@@ -101,8 +103,28 @@ export function SignUpScreen() {
 
     const onSubmit = () => {
         if (validate()) {
-            console.log('Submitted');
-            navigation.navigate("Home" as never);
+            fetch('https://chs.herokuapp.com/user/register', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: parseInt(String((Date.now() / 1000)) + (Math.random() * 100)),
+                    email: formData.email, firstname: formData.firstName, lastname: formData.lastName, phonenumber: formData.phone,
+                    password: formData.password, birthdate: moment(date).format("DD-MM-YYYY"), bloodtype: formData.bloodType
+                })
+            }).then((response) => {
+                if (response.ok) {
+                    navigation.navigate("Home" as never);
+                    setData(initialData);
+                    return response.json();
+                }
+                Alert.alert("Internal server error!");
+            })
+                .catch(e => {
+                    Alert.alert("Network error!");
+                })
         } else {
             console.log('Validation Failed');
 
@@ -136,7 +158,7 @@ export function SignUpScreen() {
                                         bold: true,
                                         color: "white"
                                     }}>First name</FormControl.Label>
-                                    <Input _focus={{ focusOutlineColor: 'white' }} color={"white"} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter first name" onChangeText={value => setData({
+                                    <Input _focus={{ focusOutlineColor: 'white' }} color={"white"} value={formData.firstName} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter first name" onChangeText={value => setData({
                                         ...formData,
                                         firstName: value
                                     })} />
@@ -145,7 +167,7 @@ export function SignUpScreen() {
                                         bold: true,
                                         color: "white"
                                     }}>Last name</FormControl.Label>
-                                    <Input _focus={{ focusOutlineColor: 'white' }} color={"white"} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter last name" onChangeText={value => {
+                                    <Input _focus={{ focusOutlineColor: 'white' }} value={formData.lastName} color={"white"} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter last name" onChangeText={value => {
                                         validate();
                                         setData({
                                             ...formData,
@@ -180,8 +202,9 @@ export function SignUpScreen() {
                                     <RNPickerSelect
                                         onValueChange={(value) => setData({
                                             ...formData,
-                                            birthDate: value
+                                            bloodType: value
                                         })}
+                                        value={formData.bloodType}
                                         items={[
                                             { label: "O+", value: "O+" },
                                             { label: "A2+", value: "A2+" },
@@ -219,7 +242,7 @@ export function SignUpScreen() {
                                         bold: true,
                                         color: "white"
                                     }}>Email</FormControl.Label>
-                                    <Input _focus={{ focusOutlineColor: 'white' }} color={"white"} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter your email" onChangeText={value => setData({
+                                    <Input _focus={{ focusOutlineColor: 'white' }} value={formData.email} color={"white"} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter your email" onChangeText={value => setData({
                                         ...formData,
                                         email: value
                                     })} />
@@ -228,7 +251,7 @@ export function SignUpScreen() {
                                         bold: true,
                                         color: "white"
                                     }}>Phone number</FormControl.Label>
-                                    <Input _focus={{ focusOutlineColor: 'white' }} color={"white"} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter your phone number" onChangeText={value => setData({
+                                    <Input _focus={{ focusOutlineColor: 'white' }} value={formData.phone} color={"white"} placeholderTextColor={"white"} fontWeight={'bold'} placeholder="Enter your phone number" onChangeText={value => setData({
                                         ...formData,
                                         phone: value
                                     })} />
@@ -237,7 +260,7 @@ export function SignUpScreen() {
                                         bold: true,
                                         color: "white"
                                     }}>Password</FormControl.Label>
-                                    <Input _focus={{ focusOutlineColor: 'white' }} secureTextEntry={true} placeholderTextColor={"white"} fontWeight={'bold'} color={'white'} placeholder="Enter your password" onChangeText={value => setData({
+                                    <Input _focus={{ focusOutlineColor: 'white' }} value={formData.password} secureTextEntry={true} placeholderTextColor={"white"} fontWeight={'bold'} color={'white'} placeholder="Enter your password" onChangeText={value => setData({
                                         ...formData,
                                         password: value
                                     })} />
@@ -262,7 +285,9 @@ export function SignUpScreen() {
                             <MaterialCommunityIcons name="google" size={px(28)} color="white"></MaterialCommunityIcons>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={{ marginTop: px(20) }} onPress={() => { navigation.navigate("Login" as never) }}>
+                    <TouchableOpacity style={{ marginTop: px(20) }} onPress={() => {
+                        navigation.navigate("Login" as never)
+                    }}>
                         <Text style={{ textShadowColor: '#F0F0F0', textShadowOffset: { width: 0, height: 16 }, textShadowRadius: 4, shadowOpacity: 0.3, fontSize: px(12), color: 'grey' }}>Already have an account?</Text>
                     </TouchableOpacity>
                 </VStack>
@@ -271,9 +296,3 @@ export function SignUpScreen() {
 
     );
 }
-const styles = StyleSheet.create({
-    header: {
-        fontSize: 22,
-        fontWeight: "bold"
-    }
-});
