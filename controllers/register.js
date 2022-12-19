@@ -9,7 +9,7 @@ const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
     const { firstname, lastname, email, phonenumber, password, birthdate, bloodtype } = req.body;
     try {
-        const data = await client.query(`SELECT * FROM users WHERE email= $3;`, [email]); //Checking if user already exists
+        const data = await client.query(`SELECT * FROM users WHERE email= $1;`, [email]); //Checking if user already exists
         const arr = data.rows;
         if (arr.length != 0) {
             return res.status(400).json({
@@ -36,7 +36,7 @@ exports.register = async (req, res) => {
                 //Inserting data into the database
 
                 client
-                    .query(`INSERT INTO users (id, firstname, lastname, email, phonenumber, password, birthdate, bloodtype) VALUES (DEFAULT,$1,$2,$3,$4,$5,$6,$7);`, [user.firstname, user.lastname, user.email, user.phonenumber, user.password, user.birthdate, user.bloodtype], (err) => {
+                    .query(`INSERT INTO users (firstname, lastname, email, phonenumber, password, birthdate, bloodtype) VALUES ($1,$2,$3,$4,$5,$6,$7);`, [user.firstname, user.lastname, user.email, user.phonenumber, user.password, user.birthdate, user.bloodtype], (err) => {
 
                         if (err) {
                             flag = 0; //If user is not inserted is not inserted to database assigning flag as 0/false.
