@@ -6,9 +6,9 @@ const jwt = require("jsonwebtoken");
 
 //Login Function
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+    const { phonenumber, password } = req.body;
     try {
-        const data = await client.query(`SELECT * FROM users WHERE email= $1;`, [email]) //Verifying if the user exists in the database
+        const data = await client.query(`SELECT * FROM users WHERE phonenumber= $1;`, [phonenumber]) //Verifying if the user exists in the database
         const user = data.rows;
         if (user.length === 0) {
             res.status(400).json({
@@ -24,13 +24,20 @@ exports.login = async (req, res) => {
                 } else if (result === true) { //Checking if credentials match
                     const token = jwt.sign(
                         {
-                            email: email,
+                            phonenumber: phonenumber,
                         },
                         process.env.SECRET_KEY
                     );
                     res.status(200).json({
                         message: "User signed in!",
                         token: token,
+                        firstName: user[0].firstname,
+                        lastName: user[0].lastname,
+                        email: user[0].email,
+                        bloodType: user[0].bloodtype,
+                        birthDate: user[0].birthdate,
+                        phoneNumber: user[0].phoneNumber,
+                        id: user[0].id
                     });
                 }
                 else {
