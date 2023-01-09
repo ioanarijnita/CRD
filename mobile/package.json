@@ -11,9 +11,9 @@
   "dependencies": {
     "@expo/vector-icons": "^13.0.0",
     "@react-native-community/datetimepicker": "^6.7.1",
+    "@react-navigation/bottom-tabs": "^6.5.2",
     "@react-navigation/native": "^6.1.0",
     "@react-navigation/stack": "^6.3.8",
-    "accordion-collapse-react-native": "^1.1.1",
     "antd": "^5.1.4",
     "evil-icons": "^1.10.1",
     "expo": "~47.0.8",
@@ -26,7 +26,6 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.5",
-    "react-native-collapsible": "^1.6.0",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-picker-select": "^8.0.4",
