@@ -3,7 +3,7 @@ import { Button, FormControl, Input, VStack } from "native-base";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { px } from "../../hooks/utils";
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons'
 import { AuthenticationModal } from "../../components/authentification-modal";
 
 type FormData<T> = {
@@ -47,7 +47,6 @@ export function LoginScreen() {
     const concept = React.useContext(LoginContext);
     const onSubmit = () => {
         if (validate()) {
-            console.log(formData)
             fetch('https://chs.herokuapp.com/user/login', {
                 method: 'POST',
                 headers: {
@@ -60,28 +59,43 @@ export function LoginScreen() {
                 })
             }).then((response) => {
                 if (response.ok) {
-                    
                     return response.json();
                 }
-                Alert.alert("Internal server error!");
             }).then(res => {
-                concept.setValue(res);
-                navigation.navigate("Home" as never);
-                setData({
-                    phone: "",
-                    password: ""
-                });
-            });
+                if (res) {
+                    concept.setValue(res);
+                    navigation.navigate("Home" as never);
+                    setData({
+                        phone: "",
+                        password: ""
+                    });
+                } else {
+                    Alert.alert("Internal server error!");
+                }
+            })
+                .catch(e => {
+                    Alert.alert("Internal server error!");
+                })
         } else {
             console.log('Validation Failed');
         }
     }
 
-    return <AuthenticationModal>
-        <View style={{ marginTop: px(18), borderTopEndRadius: px(70), borderTopStartRadius: px(70), backgroundColor: 'white', flexGrow: 1 }}>
+    return <AuthenticationModal text={"Login to your account"}>
+        <View style={{ borderTopEndRadius: px(70), borderTopStartRadius: px(70), backgroundColor: 'white', flexGrow: 1 }}>
             <View style={{ marginBottom: px(48), alignItems: 'center' }}>
-                <Text style={{ marginTop: px(48), fontSize: px(36), fontWeight: 'bold', color: 'black' }}>Welcome!</Text>
-                <Text style={{ color: '#808080' }} >Sign in to continue</Text>
+                <View style={{ marginTop: px(20), flexDirection: 'row', justifyContent: 'space-around' }}>
+                    <TouchableOpacity style={{ backgroundColor: "white", width: 35, height: 35, justifyContent: 'center', alignItems: 'center', borderRadius: px(100) }}>
+                        <MaterialCommunityIcons name="facebook" size={px(28)} color="#4267B2"></MaterialCommunityIcons>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ backgroundColor: "white", width: 35, height: 35, justifyContent: 'center', alignItems: 'center', borderRadius: px(100) }}>
+                        <MaterialCommunityIcons name="apple" size={px(28)} color="black"></MaterialCommunityIcons>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{ backgroundColor: "white", width: 35, height: 35, justifyContent: 'center', alignItems: 'center', borderRadius: px(100) }}>
+                        <AntDesign name="googleplus" size={px(28)} color="#d82c2c"></AntDesign>
+                    </TouchableOpacity>
+                </View>
+                <Text style={{ color: '#808080' }}>or use your email account</Text>
             </View>
             <View style={{ flexDirection: 'column', alignItems: 'center' }}>
                 <VStack width="90%" mx="5" maxW="225px">
@@ -92,7 +106,7 @@ export function LoginScreen() {
                                 size={px(24)}
                                 color="#808080" />}
                             height={px(40)}
-                            value = {formData.phone}
+                            value={formData.phone}
                             borderRadius={px(24)}
                             _focus={{ style: { backgroundColor: "#F8F8F8" } }}
                             placeholder="Phone number"
@@ -108,10 +122,11 @@ export function LoginScreen() {
                                 size={px(24)}
                                 color="#808080" />}
                             height={px(40)}
-                            value = {formData.password}
+                            value={formData.password}
                             borderRadius={px(24)}
                             _focus={{ style: { backgroundColor: "#F8F8F8" } }}
                             placeholder="Password"
+                            secureTextEntry={true}
                             onChangeText={value => {
                                 validate();
                                 setData({
@@ -138,22 +153,24 @@ export function LoginScreen() {
 
 export type Concept = {
     id: string,
-      firstName: string,
-        lastName: string,
-        email: string,
-        phone: string,
-        password: string,
-        birthDate: string,
-        bloodType: string
+    firstName: string,
+    lastName: string,
+    email: string,
+    phone: string,
+    password: string,
+    birthDate: string,
+    bloodType: string
 }
 
-export const LoginContext = React.createContext<{value: Concept, setValue: (value: Concept) => void}>({value: {
-    id: "",
-      firstName: "",
+export const LoginContext = React.createContext<{ value: Concept, setValue: (value: Concept) => void }>({
+    value: {
+        id: "",
+        firstName: "",
         lastName: "",
         email: "",
         phone: "",
         password: "",
         birthDate: "",
         bloodType: ""
-}, setValue: () => {}})
+    }, setValue: () => { }
+})
