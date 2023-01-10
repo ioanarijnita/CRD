@@ -177,7 +177,6 @@ export function SignUpScreen() {
                 borderRadius={px(24)}
                 _focus={{ style: { backgroundColor: "#F8F8F8" } }}
                 placeholder="Phone number"
-                secureTextEntry={true}
                 onChangeText={value => {
                     validate();
                     setData({
