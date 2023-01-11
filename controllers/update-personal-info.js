@@ -11,11 +11,10 @@ exports.updatepersonalinfo = async (req, res) => {
             });
         }
         else {
-            const progress = await client.query(`SELECT progress from users WHERE id=$1;`, [id]);
-            let progressVar = progress.rows[0];
+            let progressVar = user[0].progress;
             await client.query(`UPDATE users SET firstname=$1, lastname=$2, phonenumber=$3, birthdate=$4 WHERE id=$5;`, [firstname, lastname, phonenumber, birthdate, id]);
             if (!user.firstname || !user.lastname || !user.phonenumber || !user.birthdate) {
-                progressVar = progress + 25;
+                progressVar = progressVar + 25;
             }
             await client.query(`UPDATE users SET progress=$1 WHERE id=$2;`, [progressVar, id]);
             res.status(200).json({

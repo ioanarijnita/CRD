@@ -11,11 +11,10 @@ exports.updatebloodtype = async (req, res) => {
             });
         }
         else {
-            const progress = await client.query(`SELECT progress from users WHERE id=$1;`, [id]);
-            let progressVar = progress.rows[0];
+            let progressVar = user[0].progress;
             await client.query(`UPDATE users SET bloodtype=$1 WHERE id=$2;`, [bloodtype, id]);
             if (!user.bloodType) {
-                progressVar = progress + 25;
+                progressVar = progressVar + 25;
             }
             res.status(200).json({
                 message: "User signed in!",
