@@ -1,74 +1,18 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import MapboxGL from "@rnmapbox/maps";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { px } from "../hooks/utils";
 import { LoginContext } from "./common/login";
-
-type AnnotationType = {
-  geometry: {
-    coordinates: number[],
-    type: string
-  },
-  properties: {
-    screenPointX: number,
-    screenPointY: number
-  },
-  type: string
-}
-
-type SelectedPointType = {
-  screenPointX: number,
-  screenPointY: number,
-  title: string,
-  address: string,
-  phone: string,
-  website: string
-}
 
 export function MapScreen() {
   const nav = useNavigation();
   const concept = useContext(LoginContext);
 
   const coordinates = [28.04, 45.44];
-  const initialScreenPoints: SelectedPointType = {
-    screenPointX: -1,
-    screenPointY: -1,
-    address: "",
-    phone: "",
-    title: "",
-    website: ""
-  }
-  const [selectedPoint, setSelectedPoint] = useState<SelectedPointType>(initialScreenPoints);
 
-  const markers = [
-    {
-      key: 1,
-      title: "Prietenii cu blanita",
-      coordinates: [28.0447757, 45.4309202],
-      address: "Strada Brăilei nr. 82, bl. BR4C, Galați 800306",
-      phone: "0752111929",
-      website: "https://prieteniicublanita.ro/"
-    },
-    {
-      key: 2,
-      title: "SIAVET MEDICAL GALATI",
-      coordinates: [28.0102351, 45.4185139],
-      address: "Strada Dr. Petru Groza nr.1N, Galați 800423",
-      phone: "0745112838",
-      website: "https://www.siavetmedical.ro/"
-    },
-    {
-      key: 3,
-      title: "Galati Veterinary - Dr. Comşa Marian",
-      coordinates: [28.0530095, 45.4310003],
-      address: "Aleea Domnească, Galați 827100",
-      phone: "0743616327",
-      website: "https://www.comsavet.ro/"
-    }
-  ];
   return <View style={{ marginLeft: px(12), marginRight: px(12), }}>
     <View style={{ height: px(90), flexDirection: "column", justifyContent: "center", backgroundColor: "#f2f2f2", marginTop: px(16), borderRadius: px(24), shadowColor: "black", shadowOffset: { height: 2, width: 2 }, shadowOpacity: 0.4 }}>
       <View style={{ flexDirection: "row", justifyContent: "space-between", width: "68 %" }}>
@@ -88,35 +32,6 @@ export function MapScreen() {
           showsUserHeadingIndicator={true}
         />
         <MapboxGL.Camera centerCoordinate={coordinates} zoomLevel={12} />
-
-        <MapboxGL.PointAnnotation
-          id={"s"}
-          onSelected={(e: AnnotationType) => {
-            // setSelectedPoint({
-            //     screenPointX: e.properties.screenPointX, screenPointY: e.properties.screenPointY,
-            //     address: marker.address, phone: marker.phone, title: marker.title, website: marker.website
-            // })
-            console.log(e)
-          }}
-          coordinate={[28.04, 45.44]}
-          style={{ backgroundColor: "red" }}
-        />
-        {markers.map((marker) => (
-          <View style={{}} key={marker.key}>
-            <MapboxGL.PointAnnotation
-              id={marker.title}
-              onSelected={(e: AnnotationType) => {
-                setSelectedPoint({
-                  screenPointX: e.properties.screenPointX, screenPointY: e.properties.screenPointY,
-                  address: marker.address, phone: marker.phone, title: marker.title, website: marker.website
-                })
-                console.log(e)
-              }}
-              coordinate={marker.coordinates}
-              style={{ backgroundColor: "red" }}
-            />
-          </View>
-        ))}
       </MapboxGL.MapView>
     </View>
     <View style={{ height: px(121), flexDirection: "column", justifyContent: "center", alignItems: "center", backgroundColor: "#f2f2f2", marginTop: px(275), borderRadius: px(24), shadowColor: "black", shadowOffset: { height: 2, width: 2 }, shadowOpacity: 0.4 }}>
