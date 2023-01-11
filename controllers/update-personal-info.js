@@ -14,7 +14,6 @@ exports.updatepersonalinfo = async (req, res) => {
             await client.query(`UPDATE users SET firstname=$1, lastname=$2, phonenumber=$3, birthdate=$4 WHERE id=$5;`, [firstname, lastname, phonenumber, birthdate, id]);
             res.status(200).json({
                 message: "User signed in!",
-                token: token,
                 firstName: firstname,
                 lastName: lastname,
                 email: user[0].email,
