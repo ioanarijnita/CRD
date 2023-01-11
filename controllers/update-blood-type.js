@@ -11,7 +11,7 @@ exports.updatebloodtype = async (req, res) => {
             });
         }
         else {
-            await client.query(`UPDATE users SET bloodtype=$1 WHERE id=$5;`, [bloodtype, id]);
+            await client.query(`UPDATE users SET bloodtype=$1 WHERE id=$2;`, [bloodtype, id]);
             res.status(200).json({
                 message: "User signed in!",
                 firstName: user[0].firstName,
