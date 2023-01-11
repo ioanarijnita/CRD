@@ -11,7 +11,19 @@ exports.updatepersonalinfo = async (req, res) => {
             });
         }
         else {
-            await client.query(`UPDATE users SET firstname=$1, lastname=$2, phonenumber=$3, birthdate=$4 WHERE id=$5;`, [firstname, lastname, phonenumber, birthdate, id])
+            await client.query(`UPDATE users SET firstname=$1, lastname=$2, phonenumber=$3, birthdate=$4 WHERE id=$5;`, [firstname, lastname, phonenumber, birthdate, id]);
+            res.status(200).json({
+                message: "User signed in!",
+                token: token,
+                firstName: firstname,
+                lastName: lastname,
+                email: user[0].email,
+                bloodType: user[0].bloodtype,
+                birthDate: birthdate,
+                phoneNumber: phonenumber,
+                gender: user[0].gender,
+                id: user[0].id
+            });
         }
     } catch (err) {
         console.log(err);
