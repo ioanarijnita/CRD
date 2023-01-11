@@ -11,7 +11,12 @@ exports.updatebloodtype = async (req, res) => {
             });
         }
         else {
+            const progress = await client.query(`SELECT progress from users WHERE id=$1;`, [id]);
+            let progressVar = progress.data[0];
             await client.query(`UPDATE users SET bloodtype=$1 WHERE id=$2;`, [bloodtype, id]);
+            if (!user.bloodType) {
+                progressVar = progress + 25;
+            }
             res.status(200).json({
                 message: "User signed in!",
                 firstName: user[0].firstName,
@@ -21,7 +26,8 @@ exports.updatebloodtype = async (req, res) => {
                 birthDate: user[0].birthDate,
                 phoneNumber: user[0].phoneNumber,
                 gender: user[0].gender,
-                id: user[0].id
+                id: user[0].id,
+                progress: progressVar
             });
         }
     } catch (err) {

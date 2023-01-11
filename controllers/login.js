@@ -38,7 +38,8 @@ exports.login = async (req, res) => {
                         birthDate: user[0].birthdate,
                         phoneNumber: user[0].phonenumber,
                         gender: user[0].gender,
-                        id: user[0].id
+                        id: user[0].id,
+                        progress: user[0].progress
                     });
                 }
                 else {

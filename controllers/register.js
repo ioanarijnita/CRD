@@ -17,6 +17,7 @@ exports.register = async (req, res) => {
             });
         }
         else {
+            let progressVar = 0;
             bcrypt.hash(password, 10, (err, hash) => {
                 if (err)
                     res.status(err).json({
@@ -48,6 +49,13 @@ exports.register = async (req, res) => {
                             })
                         }
                         else {
+                            if (firstname && lastname && phonenumber && birthdate) {
+                                progressVar = 25;
+                            }
+                            if (bloodtype) {
+                                progressVar = progressVar + 25;
+                            }
+                            client.query(`UPDATE users SET progress=$1 WHERE id=$2;`, [progressVar, id]);
                             flag = 1;
                             res.status(200).send({ message: 'User added to database, not verified' });
                         }
