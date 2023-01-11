@@ -334,7 +334,7 @@ export function SignUpScreen() {
                         <GestureHandlerRootView>
                             <Carousel
                                 width={300}
-                                height={height / (carouselIdx === 0 ? 3.4 : 2.3)}
+                                height={height / (carouselIdx === 0 ? 3.5 : 2.8)}
                                 enabled={swipeLeft || swipeRight}
                                 autoPlayInterval={0}
                                 autoPlay={swipeLeft}
@@ -364,14 +364,14 @@ export function SignUpScreen() {
                             } else {
                                 setSwipeRight(true);
                             }
-                        }} style={{}}>
-                            <Ionicons name={`arrow-${carouselIdx === 0 ? "forward" : "back"}-circle-sharp`} size={px(64)} color="red"></Ionicons>
+                        }} style={{ alignSelf: "center" }}>
+                            <Ionicons name={`arrow-${carouselIdx === 0 ? "forward" : "back"}-circle-sharp`} size={px(64)} color="#808080"></Ionicons>
                         </TouchableOpacity>
                     </FormControl>
                     <TouchableOpacity style={{ marginTop: px(10) }} onPress={() => {
                         navigation.navigate("Login" as never)
                     }}>
-                        <Text style={{ textShadowColor: '#F0F0F0', textShadowOffset: { width: 0, height: 16 }, textShadowRadius: 4, shadowOpacity: 0.3, fontSize: px(12), color: 'grey' }}>Already have an account?</Text>
+                        <Text style={{ textShadowColor: '#F0F0F0', textAlign: "center", textShadowOffset: { width: 0, height: 16 }, textShadowRadius: 4, shadowOpacity: 0.3, fontSize: px(12), color: 'grey' }}>Already have an account?</Text>
                     </TouchableOpacity>
                 </VStack>
             </View>
