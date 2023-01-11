@@ -36,7 +36,8 @@ exports.login = async (req, res) => {
                         email: user[0].email,
                         bloodType: user[0].bloodtype,
                         birthDate: user[0].birthdate,
-                        phoneNumber: user[0].phoneNumber,
+                        phoneNumber: user[0].phonenumber,
+                        gender: user[0].gender,
                         id: user[0].id
                     });
                 }
