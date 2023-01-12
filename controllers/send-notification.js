@@ -12,7 +12,7 @@ exports.sendnotification = async (req, res) => {
                 [firstname, lastname, email, phonenumber, birthdate, bloodtype, gender, latitude, longitude, notificationid], (err) => {
                     if (err) {
                         res.status(500).json({
-                            message: "Error sending the notification!"
+                            message: "Error sending the notification!, error: " + err
                         })
                     } else {
                         res.status(200).json({
