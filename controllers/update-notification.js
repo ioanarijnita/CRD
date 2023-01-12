@@ -1,7 +1,7 @@
 const client = require("../configs/database");
 
 exports.updatenotification = async (req, res) => {
-    const { id, definedmessage } = req.body;
+    const { id, definedmessage, notificationid } = req.body;
     try {
         const data = await client.query(`SELECT * FROM users WHERE id= $1;`, [id]) //Verifying if the user exists in the database
         const user = data.rows;
@@ -11,7 +11,7 @@ exports.updatenotification = async (req, res) => {
             });
         }
         else {
-            await client.query(`UPDATE notifications SET definedmessage=$1 WHERE id=$2;`, [definedmessage, id]);
+            await client.query(`UPDATE notifications SET definedmessage=$1 WHERE notificationid=$2;`, [definedmessage, notificationid]);
 
             res.status(200).json({
                 message: "Notification updated!"

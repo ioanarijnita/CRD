@@ -1,7 +1,7 @@
 const client = require("../configs/database");
 
 exports.updatenotificationlocation = async (req, res) => {
-    const { id, latitude, longitude } = req.body;
+    const { id, latitude, longitude, notificationid } = req.body;
     try {
         const data = await client.query(`SELECT * FROM users WHERE id= $1;`, [id]) //Verifying if the user exists in the database
         const user = data.rows;
@@ -11,7 +11,7 @@ exports.updatenotificationlocation = async (req, res) => {
             });
         }
         else {
-            await client.query(`UPDATE notifications SET latitude=$1, longitude=$2 WHERE id=$3;`, [latitude, longitude, id]);
+            await client.query(`UPDATE notifications SET latitude=$1, longitude=$2 WHERE notificationid=$3;`, [latitude, longitude, notificationid]);
 
             res.status(200).json({
                 message: "Notification updated!"
