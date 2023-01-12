@@ -39,5 +39,7 @@ client.connect((err) => { //Connected Database
 });
 
 const  user  =  require("./routes/users");
+const  notifications  =  require("./routes/notifications");
 
 app.use("/user",  user);  //Route for /user endpoint of API
+app.use("/notifications",  notifications); 

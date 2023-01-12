@@ -18,12 +18,12 @@ exports.updatebloodtype = async (req, res) => {
             }
             res.status(200).json({
                 message: "User signed in!",
-                firstName: user[0].firstName,
-                lastName: user[0].lastName,
+                firstName: user[0].firstname,
+                lastName: user[0].lastname,
                 email: user[0].email,
                 bloodType: bloodtype,
-                birthDate: user[0].birthDate,
-                phoneNumber: user[0].phoneNumber,
+                birthDate: user[0].birthdate,
+                phoneNumber: user[0].phonenumber,
                 gender: user[0].gender,
                 id: user[0].id,
                 progress: progressVar
