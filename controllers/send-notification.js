@@ -1,5 +1,3 @@
-
-const e = require("express");
 const client = require("../configs/database");
 
 
